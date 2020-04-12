@@ -1,4 +1,5 @@
 const { json, send } = require("micro");
+const { query } = require("graphqurl");
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -21,48 +22,21 @@ module.exports = async (req, res) => {
     send(res, 404);
   }
 
-  let payload;
-  try {
-    payload = await json(req);
-  } catch (error) {
-    send(res, 400, { error });
-    return;
-  }
+  const payload = req.body;
 
   try {
     const {
-      id,
-      event: { op, data },
-      table,
-      trigger,
+      event: { data },
     } = payload;
-    fetch(HGE_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: MUTATION_SET_TIME_REMAINING,
-        variables: { roomName: data.new.name },
-      }),
-    })
-      .then(function (response) {
-        if (response.status >= 400) {
-          send(res, 500, { response, test: "???", name: data.new.name });
-        }
-        return response.json();
-      })
-      .then(function (result) {
-        send(res, 200, { result });
-      });
-
-    //   const result = await query({
-    //     query: MUTATION_SET_TIME_REMAINING,
-    //     endpoint: HGE_ENDPOINT,
-    //     variables: {
-    //       roomName: data.new.name,
-    //     },
-    //   });
-    //   send(res, 200, { result });
+    const result = await query({
+      query: MUTATION_SET_TIME_REMAINING,
+      endpoint: HGE_ENDPOINT,
+      variables: {
+        roomName: data.new.name,
+      },
+    });
+    send(res, 200, { result });
   } catch (error) {
-    send(res, 500, { error, test: "????", name: data.new.name });
+    send(res, 500, { test: "????", name: data.new.name });
   }
 };
