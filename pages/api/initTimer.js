@@ -19,6 +19,10 @@ module.exports = async (req, res) => {
   if (req.method !== "POST") {
     send(res, 404);
   }
+  if (req.method === "POST") {
+    send(res, 200, { test: "hmmmm" });
+    return;
+  }
   let payload;
   try {
     payload = await json(req);
