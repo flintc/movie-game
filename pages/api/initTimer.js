@@ -19,10 +19,7 @@ module.exports = async (req, res) => {
   if (req.method !== "POST") {
     send(res, 404);
   }
-  if (req.method === "POST") {
-    send(res, 200, { test: "hmmmm" });
-    return;
-  }
+
   let payload;
   try {
     payload = await json(req);
@@ -31,14 +28,13 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const {
-    id,
-    event: { op, data },
-    table,
-    trigger,
-  } = payload;
-
   try {
+    const {
+      id,
+      event: { op, data },
+      table,
+      trigger,
+    } = payload;
     const result = await query({
       query: MUTATION_SET_TIME_REMAINING,
       endpoint: HGE_ENDPOINT,
