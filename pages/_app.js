@@ -11,12 +11,12 @@ class MyApp extends App {
         <div>
           <Link href="/">
             <a className="text-xl font-bold text-purple-800 px-8 hover:text-purple-400">
-              Home
+              Home8
             </a>
           </Link>
           <Link href="/test">
             <a className="text-xl font-bold text-purple-800 px-8 hover:text-purple-400">
-              Test
+              Test2
             </a>
           </Link>
         </div>
